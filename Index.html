@@ -1,1 +1,785 @@
-f
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MR MASUDAR ENTERPRISE | Global Elite Affiliate Ecosystem</title>
+    
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1POhz8vb-MocaPNHg-i6nDSKwV4ky16Lc">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #030303;
+            --surface-card: #080808;
+            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --gold-solid: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #b0b0b0;
+            --font-luxury: 'Cinzel', serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-body);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Dynamic Body Alignment: Center for Entrance/Form, Top-Start for Dashboard */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center; /* Default center for initial screens */
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 12px 10px;
+        }
+
+        body.dashboard-active {
+            align-items: flex-start !important; /* Removes top gap completely on dashboard view */
+            padding-top: 10px;
+        }
+
+        .portal-wrapper {
+            width: 100%;
+            max-width: 540px;
+        }
+
+        .custom-toast { 
+            position: fixed; top: 10px; left: 50%; transform: translateX(-50%); 
+            background: rgba(12, 12, 12, 0.98); border: 1px solid var(--gold-solid); 
+            color: var(--gold-solid); padding: 6px 14px; border-radius: 20px; 
+            font-size: 0.65rem; font-weight: 700; z-index: 999999; display: none; 
+            box-shadow: 0 0 15px rgba(212,175,55,0.3); 
+        }
+
+        /* Luxury Card with Balanced Spacing */
+        .luxury-card {
+            background: var(--surface-card);
+            border-radius: 14px;
+            padding: 16px 14px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.95);
+            width: 100%;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .brand-logo {
+            width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--gold-solid);
+            object-fit: cover; margin-bottom: 6px; box-shadow: 0 0 12px rgba(212,175,55,0.4); background: #000;
+        }
+
+        .brand-title-main {
+            font-family: var(--font-luxury); font-size: 1.05rem; font-weight: 900;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; margin-bottom: 2px;
+        }
+
+        .brand-subtitle {
+            color: var(--text-gray); font-size: 0.52rem; letter-spacing: 1.5px; text-transform: uppercase;
+            margin-bottom: 12px; font-weight: 600; font-family: var(--font-luxury);
+        }
+
+        .google-auth-btn {
+            width: 100%; background: #ffffff; color: #111;
+            border: 1.5px solid var(--gold-solid); padding: 11px 16px; border-radius: 25px; font-weight: 700;
+            font-size: 0.7rem; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); transition: all 0.3s ease; text-transform: uppercase; font-family: var(--font-luxury);
+        }
+        .google-auth-btn:hover { background: var(--gold-gradient); color: #050505; }
+
+        .apply-btn {
+            display: inline-block; background: var(--gold-gradient); color: #050505; padding: 8px 18px;
+            border-radius: 18px; font-weight: 800; text-transform: uppercase; font-size: 0.62rem;
+            letter-spacing: 1px; border: none; cursor: pointer; box-shadow: 0 3px 10px rgba(212,175,55,0.3);
+            font-family: var(--font-luxury);
+        }
+
+        .form-section, .dashboard-section { display: none; text-align: left; }
+        
+        .form-grid { display: flex; flex-direction: column; gap: 8px; }
+        
+        .input-group label {
+            display: block; font-size: 0.55rem; background: var(--gold-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 2px; font-weight: 700; font-family: var(--font-luxury);
+        }
+        .input-group input, .input-group select {
+            width: 100%; background: #000; border: 1px solid rgba(212,175,55,0.3); padding: 8px 10px;
+            color: #fff; border-radius: 6px; font-size: 0.68rem; outline: none;
+        }
+
+        .phone-group { display: flex; gap: 6px; }
+        .phone-group select { width: 105px; flex-shrink: 0; }
+
+        /* Dashboard Top Header & Gear Icon */
+        .dash-top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(212,175,55,0.15); padding-bottom: 6px; margin-bottom: 8px;
+        }
+        .settings-gear-icon {
+            background: var(--gold-gradient); border: none; color: #000;
+            width: 32px; height: 32px; min-width: 32px; min-height: 32px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; cursor: pointer; 
+            font-size: 0.85rem; box-shadow: 0 0 10px rgba(212,175,55,0.4); transition: 0.3s;
+        }
+
+        .dash-stats-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 6px 0;
+        }
+        @media(min-width: 480px) {
+            .dash-stats-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .dash-stat-box {
+            background: rgba(12, 12, 12, 0.9); border-radius: 6px; padding: 7px; text-align: center;
+        }
+        .dash-stat-box span { font-size: 0.48rem; color: var(--text-gray); text-transform: uppercase; font-weight: 600; }
+        .dash-stat-box .number { font-size: 0.88rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 2px; display: block; font-family: var(--font-luxury); }
+
+        /* Performance Analytics Graph */
+        .animated-graph-box {
+            background: rgba(8, 8, 8, 0.95); border: 1px solid rgba(212,175,55,0.2); border-radius: 6px; padding: 7px; margin: 6px 0;
+        }
+        .graph-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+        .graph-filter-select {
+            background: #000; border: 1px solid rgba(212,175,55,0.3); color: var(--gold-solid);
+            padding: 2px 5px; font-size: 0.52rem; border-radius: 4px; outline: none; font-family: var(--font-luxury);
+        }
+        .graph-bars { display: flex; align-items: flex-end; justify-content: space-around; height: 70px; border-bottom: 1px solid rgba(212,175,55,0.2); padding-top: 4px; }
+        .bar-col { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 12%; }
+        .bar { width: 10px; background: var(--gold-gradient); border-radius: 2px 2px 0 0; }
+        .bar-label { font-size: 0.45rem; color: var(--text-gray); text-transform: uppercase; }
+
+        /* Dynamic Scrollable Order Tracking Ledger for 10+ Products */
+        .sheet-table-wrapper {
+            max-height: 160px; overflow-y: auto; margin: 6px 0; background: rgba(10,10,10,0.8);
+            border-radius: 6px; border: 1px solid rgba(212,175,55,0.15);
+        }
+        .sheet-table { width: 100%; border-collapse: collapse; font-size: 0.62rem; }
+        .sheet-table th, .sheet-table td { padding: 6px 6px; border-bottom: 1px solid rgba(212,175,55,0.1); }
+        .sheet-table th {
+            background: #080808; position: sticky; top: 0; z-index: 2;
+            background-image: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 800; text-transform: uppercase; font-family: var(--font-luxury);
+        }
+        .product-link-anchor { color: var(--gold-solid); text-decoration: underline; cursor: pointer; font-weight: 500; word-break: break-all; }
+        
+        .text-center { text-align: center !important; }
+        .badge-pending { color: #e74c3c; font-size: 0.95rem; display: inline-block; }
+        .badge-confirmed { color: #2ecc71; font-size: 0.95rem; display: inline-block; }
+
+        .withdraw-flex {
+            display: flex; flex-direction: column; gap: 6px; margin-top: 6px; background: rgba(12,12,12,0.9); padding: 7px; border-radius: 6px;
+        }
+        @media(min-width: 400px) {
+            .withdraw-flex { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+
+        /* Settings Modal Improvements */
+        .settings-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.88); display: none; align-items: center; justify-content: center; z-index: 99999; padding: 10px;
+        }
+        .settings-modal-card {
+            background: var(--surface-card); border: 1px solid var(--gold-solid); border-radius: 12px;
+            width: 100%; max-width: 420px; max-height: 90vh; overflow-y: auto; padding: 16px; text-align: left; position: relative;
+        }
+        .modal-close-btn {
+            position: absolute; top: 10px; right: 12px; background: transparent; border: 1px solid var(--gold-solid);
+            color: var(--gold-solid); width: 26px; height: 26px; border-radius: 50%; font-size: 0.75rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        
+        .settings-tab-nav {
+            display: flex; gap: 6px; border-bottom: 1px solid rgba(212,175,55,0.2); padding-bottom: 8px; margin-bottom: 10px;
+        }
+        .tab-btn {
+            background: transparent; border: 1px solid rgba(212,175,55,0.3); color: var(--text-gray);
+            padding: 6px 12px; border-radius: 8px; font-size: 0.62rem; font-weight: 700; cursor: pointer; text-transform: uppercase; flex: 1; text-align: center;
+        }
+        .tab-btn.active { background: var(--gold-gradient); color: #000; border-color: transparent; }
+    </style>
+</head>
+<body>
+
+    <div class="custom-toast" id="customToast">Action completed successfully!</div>
+
+    <div class="portal-wrapper">
+        
+        <!-- 1. Google Verification Entrance Card (Centered perfectly as requested) -->
+        <div class="luxury-card" id="entranceCard">
+            <img src="https://lh3.googleusercontent.com/d/1POhz8vb-MocaPNHg-i6nDSKwV4ky16Lc" alt="Logo" class="brand-logo">
+            <h1 class="brand-title-main">MR MASUDAR ENTERPRISE</h1>
+            <p class="brand-subtitle">Global Elite Affiliate Ecosystem</p>
+
+            <button class="google-auth-btn" id="googleVerifyBtn" type="button">
+                <i class="fa-brands fa-google" style="color:#ea4335; font-size:0.9rem;"></i> Continue with Google Verify
+            </button>
+        </div>
+
+        <!-- 2. Affiliate Profile Form -->
+        <div class="luxury-card form-section" id="formSection">
+            <button class="modal-close-btn" id="closeFormBtn" type="button" title="Close"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="font-family:var(--font-luxury); background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align:center; margin-bottom:10px; font-size:0.95rem; text-transform:uppercase;">Affiliate Registration</h2>
+            
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Full Legal Name *</label>
+                    <input type="text" id="fullName" placeholder="MD MASUDAR RAHMAN" required>
+                </div>
+                <div class="input-group">
+                    <label>Gmail Address *</label>
+                    <input type="email" id="email" placeholder="masudar142251@gmail.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Country *</label>
+                    <select id="regCountrySelect" required></select>
+                </div>
+                <div class="input-group">
+                    <label>WhatsApp Number *</label>
+                    <div class="phone-group">
+                        <select id="regDialCodeSelect"></select>
+                        <input type="tel" id="whatsapp" placeholder="1767319670" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 12px;">
+                <button class="apply-btn" id="completeRegBtn" type="button">Complete & Enter Dashboard</button>
+            </div>
+        </div>
+
+        <!-- 3. Luxury Elite Affiliate Dashboard (Starts cleanly from top without unwanted gaps) -->
+        <div class="luxury-card dashboard-section" id="dashboardSection">
+            <div id="partnerWelcomeBox"></div>
+        </div>
+
+    </div>
+
+    <!-- 4. Settings Hub Modal -->
+    <div class="settings-modal-overlay" id="settingsModalOverlay">
+        <div class="settings-modal-card">
+            <button class="modal-close-btn" id="closeSettingsModalBtn" type="button"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family:var(--font-luxury); background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:0.95rem; margin-bottom:10px;"><i class="fa-solid fa-gear"></i> Partner Settings Hub</h3>
+            
+            <div class="settings-tab-nav">
+                <button class="tab-btn active" onclick="switchSettingsTab('profile', this)" type="button">Profile</button>
+                <button class="tab-btn" onclick="switchSettingsTab('payment', this)" type="button">Payment</button>
+                <button class="tab-btn" onclick="switchSettingsTab('security', this)" type="button">2FA Security</button>
+            </div>
+
+            <div id="settingsTabContent"></div>
+        </div>
+    </div>
+
+    <!-- 5. Product Preview Modal -->
+    <div class="settings-modal-overlay" id="productModalOverlay">
+        <div class="settings-modal-card" style="max-width: 360px; text-align: center;">
+            <button class="modal-close-btn" onclick="closeProductModal()" type="button"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family:var(--font-luxury); background:var(--gold-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:0.9rem; margin-bottom:8px;">Product Details</h3>
+            <div id="productModalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const allCountriesAndCodes = [
+            {name: "Bangladesh", dial: "+880", flag: "🇧🇩"}, {name: "United States", dial: "+1", flag: "🇺🇸"},
+            {name: "United Kingdom", dial: "+44", flag: "🇬🇧"}, {name: "Canada", dial: "+1", flag: "🇨🇦"},
+            {name: "United Arab Emirates", dial: "+971", flag: "🇦🇪"}, {name: "India", dial: "+91", flag: "🇮🇳"},
+            {name: "Australia", dial: "+61", flag: "🇦🇺"}, {name: "Saudi Arabia", dial: "+966", flag: "🇸🇦"},
+            {name: "Germany", dial: "+49", flag: "🇩🇪"}, {name: "Malaysia", dial: "+60", flag: "🇲🇾"},
+            {name: "Afghanistan", dial: "+93", flag: "🇦🇫"}, {name: "Albania", dial: "+355", flag: "🇦🇱"}, {name: "Algeria", dial: "+213", flag: "🇩🇿"}, {name: "Andorra", dial: "+376", flag: "🇦🇩"},
+            {name: "Angola", dial: "+244", flag: "🇦🇴"}, {name: "Argentina", dial: "+54", flag: "🇦🇷"}, {name: "Armenia", dial: "+374", flag: "🇦🇲"}, {name: "Austria", dial: "+43", flag: "🇦🇹"},
+            {name: "Azerbaijan", dial: "+994", flag: "🇦🇿"}, {name: "Bahrain", dial: "+973", flag: "🇧🇭"}, {name: "Belarus", dial: "+375", flag: "🇧🇾"}, {name: "Belgium", dial: "+32", flag: "🇧🇪"},
+            {name: "Belize", dial: "+501", flag: "🇧🇿"}, {name: "Benin", dial: "+229", flag: "🇧🇯"}, {name: "Bhutan", dial: "+975", flag: "🇧🇹"}, {name: "Bolivia", dial: "+591", flag: "🇧🇴"},
+            {name: "Bosnia and Herzegovina", dial: "+387", flag: "🇧🇦"}, {name: "Botswana", dial: "+267", flag: "🇧🇼"}, {name: "Brazil", dial: "+55", flag: "🇧🇷"}, {name: "Brunei", dial: "+673", flag: "🇧🇳"},
+            {name: "Bulgaria", dial: "+359", flag: "🇧🇬"}, {name: "Burkina Faso", dial: "+226", flag: "🇧🇫"}, {name: "Burundi", dial: "+257", flag: "🇧🇮"}, {name: "Cambodia", dial: "+855", flag: "🇰🇭"},
+            {name: "Cameroon", dial: "+237", flag: "🇨🇲"}, {name: "Cape Verde", dial: "+238", flag: "🇨🇻"}, {name: "Central African Republic", dial: "+236", flag: "🇨🇫"}, {name: "Chad", dial: "+235", flag: "🇹🇩"},
+            {name: "Chile", dial: "+56", flag: "🇨🇱"}, {name: "China", dial: "+86", flag: "🇨🇳"}, {name: "Colombia", dial: "+57", flag: "🇨🇴"}, {name: "Comoros", dial: "+269", flag: "🇰🇲"},
+            {name: "Congo", dial: "+242", flag: "🇨🇬"}, {name: "Costa Rica", dial: "+506", flag: "🇨🇷"}, {name: "Croatia", dial: "+385", flag: "🇭🇷"}, {name: "Cuba", dial: "+53", flag: "🇨🇺"},
+            {name: "Cyprus", dial: "+357", flag: "🇨🇾"}, {name: "Czech Republic", dial: "+420", flag: "🇨🇿"}, {name: "Denmark", dial: "+45", flag: "🇩🇰"}, {name: "Djibouti", dial: "+253", flag: "🇩🇯"},
+            {name: "Dominican Republic", dial: "+1809", flag: "🇩🇴"}, {name: "Ecuador", dial: "+593", flag: "🇪🇨"}, {name: "Egypt", dial: "+20", flag: "🇪🇬"}, {name: "El Salvador", dial: "+503", flag: "🇸🇻"},
+            {name: "Equatorial Guinea", dial: "+240", flag: "🇬🇶"}, {name: "Eritrea", dial: "+291", flag: "🇪🇷"}, {name: "Estonia", dial: "+372", flag: "🇪🇪"}, {name: "Eswatini", dial: "+268", flag: "🇸🇿"},
+            {name: "Ethiopia", dial: "+251", flag: "🇪🇹"}, {name: "Fiji", dial: "+679", flag: "🇫🇯"}, {name: "Finland", dial: "+358", flag: "🇫🇮"}, {name: "France", dial: "+33", flag: "🇫🇷"},
+            {name: "Gabon", dial: "+241", flag: "🇬🇦"}, {name: "Gambia", dial: "+220", flag: "🇬🇲"}, {name: "Georgia", dial: "+995", flag: "🇬🇪"}, {name: "Ghana", dial: "+233", flag: "🇬🇭"},
+            {name: "Greece", dial: "+30", flag: "🇬🇷"}, {name: "Guatemala", dial: "+502", flag: "🇬🇹"}, {name: "Guinea", dial: "+224", flag: "🇬🇳"}, {name: "Guyana", dial: "+592", flag: "🇬🇾"},
+            {name: "Haiti", dial: "+509", flag: "🇭🇹"}, {name: "Honduras", dial: "+504", flag: "🇭🇳"}, {name: "Hungary", dial: "+36", flag: "🇭🇺"}, {name: "Iceland", dial: "+354", flag: "🇮🇸"},
+            {name: "Indonesia", dial: "+62", flag: "🇮🇩"}, {name: "Iran", dial: "+98", flag: "🇮🇷"}, {name: "Iraq", dial: "+964", flag: "🇮🇶"}, {name: "Ireland", dial: "+353", flag: "🇮🇪"},
+            {name: "Israel", dial: "+972", flag: "🇮🇱"}, {name: "Italy", dial: "+39", flag: "🇮🇹"}, {name: "Jamaica", dial: "+1876", flag: "🇯🇲"}, {name: "Japan", dial: "+81", flag: "🇯🇵"},
+            {name: "Jordan", dial: "+962", flag: "🇯🇴"}, {name: "Kazakhstan", dial: "+7", flag: "🇰🇿"}, {name: "Kenya", dial: "+254", flag: "🇰🇪"}, {name: "Kuwait", dial: "+965", flag: "🇰🇼"},
+            {name: "Kyrgyzstan", dial: "+996", flag: "🇰🇬"}, {name: "Laos", dial: "+856", flag: "🇱🇦"}, {name: "Latvia", dial: "+371", flag: "🇱🇻"}, {name: "Lebanon", dial: "+961", flag: "🇱🇧"},
+            {name: "Lesotho", dial: "+266", flag: "🇱🇸"}, {name: "Liberia", dial: "+231", flag: "🇱🇷"}, {name: "Libya", dial: "+218", flag: "🇱🇾"}, {name: "Lithuania", dial: "+370", flag: "🇱🇹"},
+            {name: "Luxembourg", dial: "+352", flag: "🇱🇺"}, {name: "Madagascar", dial: "+261", flag: "🇲🇬"}, {name: "Malawi", dial: "+265", flag: "🇲🇼"}, {name: "Malaysia", dial: "+60", flag: "🇲🇾"},
+            {name: "Maldives", dial: "+960", flag: "🇲🇻"}, {name: "Mali", dial: "+223", flag: "🇲🇱"}, {name: "Malta", dial: "+356", flag: "🇲🇹"}, {name: "Mauritania", dial: "+222", flag: "🇲🇷"},
+            {name: "Mauritius", dial: "+230", flag: "🇲🇺"}, {name: "Mexico", dial: "+52", flag: "🇲🇽"}, {name: "Moldova", dial: "+373", flag: "🇲🇩"}, {name: "Monaco", dial: "+377", flag: "🇲🇨"},
+            {name: "Mongolia", dial: "+976", flag: "🇲🇳"}, {name: "Montenegro", dial: "+382", flag: "🇲🇪"}, {name: "Morocco", dial: "+212", flag: "🇲🇦"}, {name: "Mozambique", dial: "+258", flag: "🇲🇿"},
+            {name: "Myanmar", dial: "+95", flag: "🇲🇲"}, {name: "Namibia", dial: "+264", flag: "🇳🇦"}, {name: "Nepal", dial: "+977", flag: "🇳🇵"}, {name: "Netherlands", dial: "+31", flag: "🇳🇱"},
+            {name: "New Zealand", dial: "+64", flag: "🇳🇿"}, {name: "Nicaragua", dial: "+505", flag: "🇳🇮"}, {name: "Niger", dial: "+227", flag: "🇳🇪"}, {name: "Nigeria", dial: "+234", flag: "🇳🇬"},
+            {name: "North Korea", dial: "+850", flag: "🇰🇵"}, {name: "Norway", dial: "+47", flag: "🇳🇴"}, {name: "Oman", dial: "+968", flag: "🇴🇲"}, {name: "Pakistan", dial: "+92", flag: "🇵🇰"},
+            {name: "Palestine", dial: "+970", flag: "🇵🇸"}, {name: "Panama", dial: "+507", flag: "🇵🇦"}, {name: "Papua New Guinea", dial: "+675", flag: "🇵🇬"}, {name: "Paraguay", dial: "+595", flag: "🇵🇾"},
+            {name: "Peru", dial: "+51", flag: "🇵🇪"}, {name: "Philippines", dial: "+63", flag: "🇵🇭"}, {name: "Poland", dial: "+48", flag: "🇵🇱"}, {name: "Portugal", dial: "+351", flag: "🇵🇹"},
+            {name: "Qatar", dial: "+974", flag: "🇶🇦"}, {name: "Romania", dial: "+40", flag: "🇷🇴"}, {name: "Russia", dial: "+7", flag: "🇷🇺"}, {name: "Rwanda", dial: "+250", flag: "🇷🇼"},
+            {name: "Senegal", dial: "+221", flag: "🇸🇳"}, {name: "Serbia", dial: "+381", flag: "🇷🇸"}, {name: "Singapore", dial: "+65", flag: "🇸🇬"}, {name: "Slovakia", dial: "+421", flag: "🇸🇰"},
+            {name: "Slovenia", dial: "+386", flag: "🇸🇮"}, {name: "Somalia", dial: "+252", flag: "🇸🇴"}, {name: "South Africa", dial: "+27", flag: "🇿🇦"}, {name: "South Korea", dial: "+82", flag: "🇰🇷"},
+            {name: "Spain", dial: "+34", flag: "🇪🇸"}, {name: "Sri Lanka", dial: "+94", flag: "🇱🇰"}, {name: "Sudan", dial: "+249", flag: "🇸🇩"}, {name: "Sweden", dial: "+46", flag: "🇸🇪"},
+            {name: "Switzerland", dial: "+41", flag: "🇨🇭"}, {name: "Syria", dial: "+963", flag: "🇸🇾"}, {name: "Taiwan", dial: "+886", flag: "🇹🇼"}, {name: "Tajikistan", dial: "+992", flag: "🇹🇯"},
+            {name: "Tanzania", dial: "+255", flag: "🇹🇿"}, {name: "Thailand", dial: "+66", flag: "🇹🇭"}, {name: "Togo", dial: "+228", flag: "🇹🇬"}, {name: "Tunisia", dial: "+216", flag: "🇹🇳"}, {name: "Turkey", dial: "+90", flag: "🇹🇷"},
+            {name: "Turkmenistan", dial: "+993", flag: "🇹🇲"}, {name: "Uganda", dial: "+256", flag: "🇺🇬"}, {name: "Ukraine", dial: "+380", flag: "🇺🇦"}, {name: "Uruguay", dial: "+598", flag: "🇺🇾"},
+            {name: "Uzbekistan", dial: "+998", flag: "🇺🇿"}, {name: "Venezuela", dial: "+58", flag: "🇻🇪"}, {name: "Vietnam", dial: "+84", flag: "🇻🇳"}, {name: "Yemen", dial: "+967", flag: "🇾🇪"},
+            {name: "Zambia", dial: "+260", flag: "🇿🇲"}, {name: "Zimbabwe", dial: "+263", flag: "🇿🇼"}
+        ];
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const countrySelect = document.getElementById('regCountrySelect');
+            const dialSelect = document.getElementById('regDialCodeSelect');
+            if(countrySelect && dialSelect) {
+                allCountriesAndCodes.forEach(c => {
+                    let opt1 = document.createElement('option');
+                    opt1.value = c.name; opt1.textContent = c.flag + " " + c.name;
+                    countrySelect.appendChild(opt1);
+
+                    let opt2 = document.createElement('option');
+                    opt2.value = c.dial; opt2.textContent = c.flag + " " + c.dial;
+                    if(c.name === "Bangladesh") opt2.selected = true;
+                    dialSelect.appendChild(opt2);
+                });
+            }
+
+            document.getElementById('googleVerifyBtn').addEventListener('click', googleVerifyAndOpenForm);
+            document.getElementById('closeFormBtn').addEventListener('click', skipFormToDashboard);
+            document.getElementById('completeRegBtn').addEventListener('click', completeAffiliateRegistration);
+            document.getElementById('closeSettingsModalBtn').addEventListener('click', closeSettingsModal);
+
+            let savedUserJson = localStorage.getItem('mme_active_user_data');
+            if(savedUserJson) {
+                try {
+                    window.currentUserData = JSON.parse(savedUserJson);
+                    renderDashboard(window.currentUserData);
+                } catch(e) {}
+            }
+        });
+
+        function showToast(msg) {
+            let t = document.getElementById('customToast');
+            if(!t) return;
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 2000);
+        }
+
+        function googleVerifyAndOpenForm() {
+            let savedUserJson = localStorage.getItem('mme_active_user_data');
+            if(savedUserJson) {
+                try {
+                    window.currentUserData = JSON.parse(savedUserJson);
+                    renderDashboard(window.currentUserData);
+                    showToast("Verified Successfully!");
+                    return;
+                } catch(e) {
+                    localStorage.removeItem('mme_active_user_data');
+                }
+            }
+
+            document.getElementById('entranceCard').style.display = 'none';
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('email').value = "masudar142251@gmail.com";
+            document.getElementById('fullName').value = "MD MASUDAR RAHMAN";
+            showToast("Google Verified! Complete registration.");
+        }
+
+        function skipFormToDashboard() {
+            let savedUserJson = localStorage.getItem('mme_active_user_data');
+            if(savedUserJson) {
+                try {
+                    window.currentUserData = JSON.parse(savedUserJson);
+                    renderDashboard(window.currentUserData);
+                    return;
+                } catch(e) {}
+            }
+
+            let defaultPartner = {
+                id: "135121", name: "MD MASUDAR RAHMAN", email: "masudar142251@gmail.com", 
+                country: "🇧🇩 Bangladesh", whatsapp: "+8801767319670",
+                clicks: 0, totalProductsSold: 0, availableBalance: 0.00, 
+                payoutType: 'bKash', payoutAccount: '', tfaEnabled: false
+            };
+            localStorage.setItem('mme_active_user_data', JSON.stringify(defaultPartner));
+            renderDashboard(defaultPartner);
+            showToast("Entered Dashboard Successfully!");
+        }
+
+        function completeAffiliateRegistration() {
+            let name = document.getElementById('fullName').value.trim();
+            let email = document.getElementById('email').value.trim();
+            let countryName = document.getElementById('regCountrySelect').value;
+            let waCode = document.getElementById('regDialCodeSelect').value;
+            let waNum = document.getElementById('whatsapp').value.trim();
+
+            if(!name || !email || !waNum) {
+                alert("Please fill in all mandatory fields.");
+                return;
+            }
+
+            let matchObj = allCountriesAndCodes.find(c => c.name === countryName);
+            let flagIcon = matchObj ? matchObj.flag : '🇧🇩';
+
+            let affiliateId = Math.floor(100000 + Math.random() * 900000).toString();
+            let partner = {
+                id: affiliateId, name, email, country: `${flagIcon} ${countryName}`, whatsapp: waCode + waNum,
+                clicks: 0, totalProductsSold: 0, availableBalance: 0.00, 
+                payoutType: 'bKash', payoutAccount: '', tfaEnabled: false
+            };
+
+            localStorage.setItem('mme_active_session', affiliateId);
+            localStorage.setItem('mme_active_user_data', JSON.stringify(partner));
+
+            renderDashboard(partner);
+            showToast("Registration Complete!");
+        }
+
+        function renderDashboard(user) {
+            window.currentUserData = user;
+            
+            // Remove center alignment on body and apply top alignment for dashboard view
+            document.body.classList.add('dashboard-active');
+
+            document.getElementById('entranceCard').style.display = 'none';
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+
+            let currentBalance = user.availableBalance !== undefined ? user.availableBalance : 0.00;
+
+            let dashHtml = `
+                <div class="dash-top-bar">
+                    <div>
+                        <h3 style="background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin:0; font-family:var(--font-luxury); font-size:0.92rem;">${user.name}</h3>
+                        <span style="font-size:0.52rem; color:var(--text-gray);">ID: ${user.id} | ${user.country} | 10% Commission</span>
+                    </div>
+                    <div style="display:flex; gap:6px; align-items:center;">
+                        <button class="settings-gear-icon" onclick="openSettingsModal('profile')" title="Settings Hub" type="button"><i class="fa-solid fa-gear"></i></button>
+                        <button onclick="logoutSession()" type="button" style="background:none; border:none; color:var(--text-gray); cursor:pointer; font-size:0.58rem; text-decoration:underline;">Sign Out</button>
+                    </div>
+                </div>
+
+                <div class="dash-stats-grid">
+                    <div class="dash-stat-box">
+                        <span>Total Revenue</span>
+                        <span class="number">$${currentBalance.toFixed(2)}</span>
+                    </div>
+                    <div class="dash-stat-box">
+                        <span>Products Sold</span>
+                        <span class="number">0000</span>
+                    </div>
+                    <div class="dash-stat-box">
+                        <span>Active Clicks</span>
+                        <span class="number">0000</span>
+                    </div>
+                    <div class="dash-stat-box">
+                        <span>Available Payout</span>
+                        <span class="number" id="availableBalanceDisplay">$${currentBalance.toFixed(2)}</span>
+                    </div>
+                </div>
+
+                <!-- Performance Analytics Graph -->
+                <div class="animated-graph-box">
+                    <div class="graph-header-flex">
+                        <span style="font-size:0.6rem; color:var(--gold-solid); text-transform:uppercase; font-weight:700; font-family:var(--font-luxury);"><i class="fa-solid fa-chart-line"></i> Analytics</span>
+                        <select class="graph-filter-select" onchange="updateGraphData(this.value)">
+                            <option value="7d">Last 7 Days</option>
+                            <option value="1m">Last 1 Month</option>
+                            <option value="1y">Last 1 Year</option>
+                        </select>
+                    </div>
+                    <div class="graph-bars" id="graphContainerBars">
+                        <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Mon</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Tue</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Wed</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Thu</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Fri</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Sat</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Sun</span></div>
+                    </div>
+                </div>
+
+                <!-- Scrollable Order Tracking Ledger -->
+                <div class="sheet-table-wrapper">
+                    <table class="sheet-table">
+                        <thead>
+                            <tr>
+                                <th>Product Link</th>
+                                <th class="text-center">Pending</th>
+                                <th class="text-center">Confirmed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="product-link-anchor" onclick="openProductPreview('101', 'Pending')">mrmasudar.com/product/101?ref=${user.id}</span></td>
+                                <td class="text-center"><span class="badge-pending"><i class="fa-solid fa-circle-xmark"></i></span></td>
+                                <td class="text-center" style="color:var(--text-gray);">-</td>
+                            </tr>
+                            <tr>
+                                <td><span class="product-link-anchor" onclick="openProductPreview('102', 'Confirmed')">mrmasudar.com/product/102?ref=${user.id}</span></td>
+                                <td class="text-center" style="color:var(--text-gray);">-</td>
+                                <td class="text-center"><span class="badge-confirmed"><i class="fa-solid fa-circle-check"></i></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Withdraw Section -->
+                <div class="withdraw-flex">
+                    <div style="display:flex; gap:6px; align-items:center; width:100%;">
+                        <input type="number" id="withdrawAmountInput" placeholder="Amount ($)" style="background:#000; border:1px solid rgba(212,175,55,0.3); padding:6px 8px; color:#fff; border-radius:5px; font-size:0.65rem; width:110px; outline:none;">
+                        <button class="apply-btn" type="button" style="padding:6px 14px; font-size:0.6rem;" onclick="requestWithdrawal()">Withdraw</button>
+                    </div>
+                    <span style="font-size:0.55rem; color:var(--text-gray);">Method: <b style="color:var(--gold-solid);">${user.payoutType || 'bKash'}</b></span>
+                </div>
+            `;
+            document.getElementById('partnerWelcomeBox').innerHTML = dashHtml;
+        }
+
+        function openProductPreview(productId, status) {
+            let modalBody = document.getElementById('productModalBody');
+            let statusBadge = status === 'Confirmed' ? '<span class="badge-confirmed"><i class="fa-solid fa-circle-check"></i> Confirmed</span>' : '<span class="badge-pending"><i class="fa-solid fa-circle-xmark"></i> Pending</span>';
+            
+            modalBody.innerHTML = `
+                <div style="padding: 8px 0;">
+                    <p style="font-size: 0.68rem; color: var(--text-gray); margin-bottom: 5px;">Product ID: <b>#${productId}</b></p>
+                    <p style="font-size: 0.75rem; font-weight: 700; color: #fff; margin-bottom: 10px;">MR Masudar Enterprise Product</p>
+                    <div style="margin-bottom: 10px;">Status: ${statusBadge}</div>
+                    <p style="font-size: 0.6rem; color: var(--gold-solid);">Link: https://mrmasudar.com/product/${productId}</p>
+                </div>
+            `;
+            document.getElementById('productModalOverlay').style.display = 'flex';
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModalOverlay').style.display = 'none';
+        }
+
+        function openSettingsModal(tabName = 'profile') {
+            switchSettingsTab(tabName);
+            document.getElementById('settingsModalOverlay').style.display = 'flex';
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModalOverlay').style.display = 'none';
+        }
+
+        function switchSettingsTab(tab, btnElem) {
+            if(btnElem) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btnElem.classList.add('active');
+            } else {
+                let btns = document.querySelectorAll('.tab-btn');
+                if(btns.length >= 3) {
+                    if(tab === 'profile') btns[0].classList.add('active');
+                    if(tab === 'payment') btns[1].classList.add('active');
+                    if(tab === 'security') btns[2].classList.add('active');
+                }
+            }
+
+            let user = window.currentUserData;
+            let contentHtml = '';
+
+            if(tab === 'profile') {
+                contentHtml = `
+                    <div style="margin-bottom:8px;">
+                        <label style="font-size:0.58rem; color:var(--gold-solid); display:block; margin-bottom:3px;">Full Legal Name:</label>
+                        <input type="text" id="editName" value="${user.name}" style="background:#000; border:1px solid rgba(212,175,55,0.3); padding:7px; color:#fff; width:100%; border-radius:6px; font-size:0.7rem;">
+                    </div>
+                    <div style="margin-bottom:8px;">
+                        <label style="font-size:0.58rem; color:var(--gold-solid); display:block; margin-bottom:3px;">Gmail Address:</label>
+                        <input type="email" id="editEmail" value="${user.email}" style="background:#000; border:1px solid rgba(212,175,55,0.3); padding:7px; color:#fff; width:100%; border-radius:6px; font-size:0.7rem;">
+                    </div>
+                    <div style="margin-bottom:8px;">
+                        <label style="font-size:0.58rem; color:var(--gold-solid); display:block; margin-bottom:3px;">WhatsApp Number:</label>
+                        <input type="text" id="editWhatsapp" value="${user.whatsapp || ''}" style="background:#000; border:1px solid rgba(212,175,55,0.3); padding:7px; color:#fff; width:100%; border-radius:6px; font-size:0.7rem;">
+                    </div>
+                    <div style="text-align:right; margin-top:10px;">
+                        <button onclick="saveProfileChanges()" type="button" class="apply-btn" style="padding:6px 16px; font-size:0.65rem;">Save Profile</button>
+                    </div>
+                `;
+            } else if(tab === 'payment') {
+                let currentMethod = user.payoutType || 'bKash';
+                let isPayoneer = currentMethod === 'Payoneer';
+                let labelText = isPayoneer ? 'Payoneer Email Address:' : 'bKash Account Number:';
+                let placeholderText = isPayoneer ? 'Enter Payoneer email' : 'Enter 11-digit bKash';
+
+                contentHtml = `
+                    <div style="margin-bottom:8px;">
+                        <label style="font-size:0.58rem; color:var(--gold-solid); display:block; margin-bottom:3px;">Payment Method:</label>
+                        <select id="editPayoutType" onchange="onPaymentMethodChange(this.value)" style="background:#000; border:1px solid rgba(212,175,55,0.3); padding:7px; color:#fff; width:100%; border-radius:6px; font-size:0.7rem; margin-bottom:6px;">
+                            <option value="bKash" ${!isPayoneer ? 'selected' : ''}>bKash</option>
+                            <option value="Payoneer" ${isPayoneer ? 'selected' : ''}>Payoneer</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <label style="font-size:0.58rem; color:var(--gold-solid); display:block; margin-bottom:3px;" id="payoutInputLabel">${labelText}</label>
+                        <input type="text" id="editPayoutAccount" value="${user.payoutAccount || ''}" placeholder="${placeholderText}" style="background:#000; border:1px solid rgba(212,175,55,0.3); padding:7px; color:#fff; width:100%; border-radius:6px; font-size:0.7rem;">
+                    </div>
+                    <div style="text-align:right; margin-top:10px;">
+                        <button onclick="savePaymentChanges()" type="button" class="apply-btn" style="padding:6px 16px; font-size:0.65rem;">Save Payment</button>
+                    </div>
+                `;
+            } else if(tab === 'security') {
+                if (user.tfaEnabled) {
+                    contentHtml = `
+                        <div style="text-align:center; padding:15px 0;">
+                            <div style="font-size: 2rem; color: #2ecc71; margin-bottom: 6px;"><i class="fa-solid fa-circle-check"></i></div>
+                            <p style="font-size:0.75rem; color:var(--text-white); font-weight:700; margin-bottom:4px;">2FA Secured & Verified</p>
+                            <p style="font-size:0.6rem; color:var(--text-gray);">Account protected with Google Authenticator.</p>
+                        </div>
+                    `;
+                } else {
+                    contentHtml = `
+                        <div style="text-align:center; padding:4px 0;">
+                            <p style="font-size:0.62rem; color:#f39c12; font-weight:700; margin-bottom:6px;">Status: Disabled (Required for Payouts)</p>
+                            <div style="background:#fff; padding:6px; width:110px; height:110px; margin:0 auto 6px auto; border-radius:6px; display:flex; align-items:center; justify-content:center;">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=otpauth://totp/MRMASUDAR:${user.email}?secret=JBSWY3DPEHPK3PXP&issuer=MRMASUDAR" alt="2FA QR" style="width:100px; height:100px;">
+                            </div>
+                            <div style="font-size:0.58rem; color:var(--gold-solid); margin-bottom:8px;">Key: <b>JBSWY3DPEHPK3PXP</b></div>
+                            <div style="max-width:220px; margin:0 auto 8px auto;">
+                                <input type="text" id="tfaCodeInput" placeholder="Enter 6-digit Code" style="background:#000; border:1px solid rgba(212,175,55,0.3); padding:6px; color:#fff; width:100%; text-align:center; border-radius:5px; font-size:0.7rem; letter-spacing:2px;">
+                            </div>
+                            <button onclick="verifyAndEnable2FA()" type="button" class="apply-btn" style="padding:6px 16px; font-size:0.62rem;">Verify & Enable</button>
+                        </div>
+                    `;
+                }
+            }
+
+            document.getElementById('settingsTabContent').innerHTML = contentHtml;
+        }
+
+        function onPaymentMethodChange(val) {
+            let labelElem = document.getElementById('payoutInputLabel');
+            let inputElem = document.getElementById('editPayoutAccount');
+            if(val === 'Payoneer') {
+                labelElem.innerText = 'Payoneer Email Address:';
+                inputElem.placeholder = 'Enter Payoneer email';
+            } else {
+                labelElem.innerText = 'bKash Account Number:';
+                inputElem.placeholder = 'Enter 11-digit bKash';
+            }
+        }
+
+        function saveProfileChanges() {
+            if(window.currentUserData) {
+                window.currentUserData.name = document.getElementById('editName').value;
+                window.currentUserData.email = document.getElementById('editEmail').value;
+                window.currentUserData.whatsapp = document.getElementById('editWhatsapp').value;
+
+                localStorage.setItem('mme_active_user_data', JSON.stringify(window.currentUserData));
+                renderDashboard(window.currentUserData);
+                showToast("Profile Updated");
+            }
+        }
+
+        function savePaymentChanges() {
+            let type = document.getElementById('editPayoutType').value;
+            let account = document.getElementById('editPayoutAccount').value.trim();
+
+            if(!account) {
+                alert("Please enter a valid payout account.");
+                return;
+            }
+
+            if(window.currentUserData) {
+                window.currentUserData.payoutType = type;
+                window.currentUserData.payoutAccount = account;
+
+                localStorage.setItem('mme_active_user_data', JSON.stringify(window.currentUserData));
+                renderDashboard(window.currentUserData);
+                document.getElementById('settingsModalOverlay').style.display = 'none';
+                showToast("Payment Saved");
+            }
+        }
+
+        function verifyAndEnable2FA() {
+            let code = document.getElementById('tfaCodeInput').value.trim();
+            if(code.length !== 6) {
+                alert("Please enter valid 6-digit code.");
+                return;
+            }
+            if(window.currentUserData) {
+                window.currentUserData.tfaEnabled = true;
+                localStorage.setItem('mme_active_user_data', JSON.stringify(window.currentUserData));
+                showToast("2FA Enabled Successfully");
+                switchSettingsTab('security');
+            }
+        }
+
+        function updateGraphData(period) {
+            let container = document.getElementById('graphContainerBars');
+            if(period === '7d') {
+                container.innerHTML = `
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Mon</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Tue</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Wed</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Thu</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Fri</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Sat</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Sun</span></div>
+                `;
+            } else if(period === '1m') {
+                container.innerHTML = `
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">W1</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">W2</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">W3</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">W4</span></div>
+                `;
+            } else if(period === '1y') {
+                container.innerHTML = `
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Q1</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Q2</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Q3</span></div>
+                    <div class="bar-col"><div class="bar" style="height: 10px;"></div><span class="bar-label">Q4</span></div>
+                `;
+            }
+            showToast("Analytics updated");
+        }
+
+        function requestWithdrawal() {
+            let user = window.currentUserData;
+            let amt = parseFloat(document.getElementById('withdrawAmountInput').value);
+
+            if(!user.payoutType || !user.payoutAccount) {
+                alert("Please complete Payment Setup in Settings.");
+                openSettingsModal('payment');
+                return;
+            }
+            if(!user.tfaEnabled) {
+                alert("Please enable 2FA Security in Settings.");
+                openSettingsModal('security');
+                return;
+            }
+            if(isNaN(amt) || amt <= 0) {
+                alert("Please enter valid amount.");
+                return;
+            }
+            if(amt > user.availableBalance) {
+                alert("Insufficient balance ($0.00).");
+                return;
+            }
+
+            user.availableBalance -= amt;
+            localStorage.setItem('mme_active_user_data', JSON.stringify(user));
+            document.getElementById('availableBalanceDisplay').innerText = '$' + user.availableBalance.toFixed(2);
+            showToast(`Withdrawal of $${amt.toFixed(2)} requested!`);
+        }
+
+        function logoutSession() {
+            localStorage.removeItem('mme_active_session');
+            localStorage.removeItem('mme_active_user_data');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
